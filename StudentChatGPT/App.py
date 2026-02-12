@@ -94,8 +94,7 @@ A student question
 
 Rules:
 - Answer ONLY using the provided context.
-- If the context does not contain enough information to answer, say clearly:
-"I don't know based on the provided document."
+- If the context does not contain enough information to answer, say clearly: "I don't know based on the provided document."
 - Do not invent definitions, formulas, or facts.
 - Explain in a clear student-friendly way.
 - If useful, give a short example or simple explanation.
@@ -116,8 +115,8 @@ Rules:
 [CHUNK 4]
 {returnedChunks[3]}
 
-Using ONLY the context above, answer the following question:
 Question: {question}
+if the chunks don't have enough content to answer the given question answer with :"I don't know based on the provided document"
 """
 
     response = ollama.chat(
