@@ -24,6 +24,17 @@ CORS(app,origins=["http://localhost:5173"])
 
 @app.route("/ChatApp", methods=["POST"])
 def home():
+    #handling user questions 
+    data=request.get_json()
+    question =data.get("question")
+    embeddedQuestion=embedText(question)
+    #retrieving list of most relevent chunks
+    returnedChunks=mostReleventChunks(embeddedQuestion)
+    finalRespond=generateFinalResponse(returnedChunks,question)
+    return jsonify({"answer": f"{finalRespond}"})
+
+@app.route("/embed",methods=["POST"])
+def embed():
     text = ""
     with pdfplumber.open("./PDF_Files/DocumentToAnswerFrom.pdf") as pdf:
         for page in pdf.pages:
@@ -35,6 +46,7 @@ def home():
     #striped text
     stripedTextNoCar=cleanText(text)
     #list of chunks
+    global chunks
     chunks=returnChunks(stripedTextNoCar)
     #list of embedding 
     for txt in chunks:
@@ -42,15 +54,7 @@ def home():
     #creation de collection 
     collection=clientChroma.get_or_create_collection(name="Cours")
     collection.add(ids=[str(chunk["id"]) for chunk in chunks],documents=[chunk["Text"] for chunk in chunks],embeddings=[chunk["Embedding"] for chunk in chunks])
-    #handling user questions 
-    data=request.get_json()
-    question =data.get("question")
-    embeddedQuestion=embedText(question)
-    #retrieving list of most relevent chunks
-    returnedChunks=mostReleventChunks(embeddedQuestion)
-    finalRespond=generateFinalResponse(returnedChunks,question)
-    return jsonify({"answer": f"{finalRespond}"})
-
+    return jsonify({"message": "Embedding done", "chunks": len(chunks)})
 
 
     

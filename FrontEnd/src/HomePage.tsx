@@ -1,5 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
+import "./App.css";
 
 export function HomePage() {
   const [pdfFile, setPdfFile] = useState<File | null>(null);
@@ -27,6 +28,8 @@ export function HomePage() {
         },
       );
       console.log("PDF Sent:", res.data);
+      const embedPDF = await axios.post("http://127.0.0.1:8000/embed", {});
+      console.log(embedPDF);
     } catch (error) {
       console.error("Error updating:", error);
     }
@@ -34,10 +37,30 @@ export function HomePage() {
 
   return (
     <>
-      <h2>Document to ask about:</h2>
-      <input type="file" name="" onChange={handlePDF} id="" />
-      {pdfFile && <p>Selected file: {pdfFile.name}</p>}
-      <input type="button" value="Send File" onClick={() => sendPDF(pdfFile)} />
+      <div className="home-page">
+        <h2>📄 Document to Ask About</h2>
+        <div className="pdf-upload-section">
+          <label htmlFor="pdf-input" className="file-input-label">
+            📁 Click to select or drag & drop a PDF file
+          </label>
+          <input
+            type="file"
+            id="pdf-input"
+            onChange={handlePDF}
+            accept=".pdf"
+          />
+
+          {pdfFile && <div className="file-selected">{pdfFile.name}</div>}
+
+          <button
+            className="btn btn-primary btn-block"
+            onClick={() => sendPDF(pdfFile)}
+            disabled={!pdfFile}
+          >
+            📤 Send File
+          </button>
+        </div>
+      </div>
     </>
   );
 }
