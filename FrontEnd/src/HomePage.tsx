@@ -20,15 +20,11 @@ export function HomePage() {
     const formData = new FormData();
     formData.append("pdf", file);
     try {
-      const res = await axios.post(
-        "http://localhost:8000/api/sendPdf",
-        formData,
-        {
-          headers: { "Content-Type": "multipart/form-data" },
-        },
-      );
+      const res = await axios.post(import.meta.env.VITE_UPLOAD_PDF, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
       console.log("PDF Sent:", res.data);
-      const embedPDF = await axios.post("http://127.0.0.1:8000/embed", {});
+      const embedPDF = await axios.post(import.meta.env.VITE_EMBED, {});
       console.log(embedPDF);
     } catch (error) {
       console.error("Error updating:", error);

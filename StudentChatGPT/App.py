@@ -20,9 +20,9 @@ clientChroma=chromadb.PersistentClient(path="./ChromaDB/")
 
 
 app = Flask(__name__)
-CORS(app,origins=["http://localhost:5173"])  
+CORS(app,origins=[os.getenv("Origin")])  
 
-@app.route("/ChatApp", methods=["POST"])
+@app.route(os.getenv("ChatAppURL"), methods=["POST"])
 def home():
     #handling user questions 
     data=request.get_json()
@@ -33,7 +33,7 @@ def home():
     finalRespond=generateFinalResponse(returnedChunks,question)
     return jsonify({"answer": f"{finalRespond}"})
 
-@app.route("/embed",methods=["POST"])
+@app.route(os.getenv("embedURL"),methods=["POST"])
 def embed():
     text = ""
     with pdfplumber.open("./PDF_Files/DocumentToAnswerFrom.pdf") as pdf:

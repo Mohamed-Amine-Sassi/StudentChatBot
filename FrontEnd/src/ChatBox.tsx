@@ -11,7 +11,7 @@ export function ChatBox() {
     setIsLoading(true);
 
     try {
-      const response = await axios.post("http://127.0.0.1:8000/ChatApp", {
+      const response = await axios.post(import.meta.env.VITE_ANSWER, {
         question: Q,
       });
       setTextArea(response.data.answer);

@@ -3,17 +3,18 @@ import multer from "multer";
 import cors from "cors";
 import fs from "fs";
 import path from "path";
+import "dotenv/config";
 
-const PORT = 8000;
+const PORT = process.env.PORT;
 const app = express();
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: `${process.env.ORIGIN_URL}`,
   }),
 );
-app.post("/api/sendPdf", upload.single("pdf"), (req, res) => {
+app.post(`${process.env.SEND_PDF}`, upload.single("pdf"), (req, res) => {
   if (!req.file) {
     return res.status(400).json({ message: "No file uploaded" });
   }
